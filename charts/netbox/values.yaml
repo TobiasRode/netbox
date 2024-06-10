@@ -81,12 +81,6 @@ superuser:
   apiToken: ""
   existingSecret: ""
 
-# Skip the netbox-docker startup scripts which can pre-populate objects into a
-# fresh NetBox installation. By default these do nothing, but they take a while
-# to run, so we skip them. See:
-# https://github.com/netbox-community/netbox-docker/tree/master/startup_scripts
-skipStartupScripts: true
-
 # This is a list of valid fully-qualified domain names (FQDNs) for the NetBox
 # server. NetBox will not permit write access to the server via any other
 # hostnames. The first FQDN in the list will be treated as the preferred name.
@@ -1166,6 +1160,18 @@ housekeeping:
   ## @param housekeeping.failedHistoryLimit Number of failed finished jobs to retain
   ##
   failedHistoryLimit: 5
+  ## @param housekeeping.command The command to execute in the housekeeping job
+  ## To append another command, e.g. in order to shut down a DB sidecar container, use something like
+  ##   - /bin/bash
+  ##   - -c
+  ##   - >
+  ##     /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py housekeeping
+  ##     && curl -X POST http://localhost:9190/quitquitquit"
+  ##
+  command:
+    - /opt/netbox/venv/bin/python
+    - /opt/netbox/netbox/manage.py
+    - housekeeping
   ## @param housekeeping.podAnnotations Pod annotations
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
   ##
